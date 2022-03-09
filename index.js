@@ -8,10 +8,6 @@ const { type } = require("os");
 
 const employees = [];
 
-// init
-// inquirer questions to fill in the employee data
-// choice of role change
-// add changed role to the employee
 // fs.writeFileSync()
 
 const managerPrompts = [
@@ -85,6 +81,10 @@ const employeePrompts = [
 	},
 ];
 
+function handleHTML() {
+	//
+}
+
 function addNewEE() {
 	prompt({
 		message: "Are there more member's on the team?",
@@ -122,7 +122,7 @@ function addNewEE() {
 		} else {
 			console.log("making HTML");
 			console.log(employees);
-			// handleHTML();
+			handleHTML();
 		}
 	});
 }
