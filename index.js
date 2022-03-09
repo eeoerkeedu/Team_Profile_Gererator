@@ -8,37 +8,28 @@ const { type } = require("os");
 
 const employees = [];
 
-// fs.writeFileSync()
-
 const managerPrompts = [
 	{
-		message: "Please input dev team project/name",
-		name: "teamName",
-		type: "input",
-		default: "Tim's Devs",
-	},
-	{
 		message: "Please input the Manager's name:",
-		name: "managerName",
+		name: "name",
 		type: "input",
 		default: "Tim",
 	},
 	{
-		message: (answers) => `Please input ${answers.managerName}'s ID number:`,
-		name: "managerId",
+		message: (answers) => `Please input ${answers.name}'s ID number:`,
+		name: "idNum",
 		type: "input",
 		default: "01m",
 	},
 	{
-		message: (answers) => `Please input ${answers.managerName}'s email:`,
-		name: "managerEmail",
+		message: (answers) => `Please input ${answers.name}'s email:`,
+		name: "email",
 		type: "input",
 		default: "tim@workplace.com",
 	},
 	{
-		message: (answers) =>
-			`Please input ${answers.managerName}'s office number:`,
-		name: "managerOffice",
+		message: (answers) => `Please input ${answers.name}'s office number:`,
+		name: "other",
 		type: "input",
 		default: "1A",
 	},
@@ -81,8 +72,92 @@ const employeePrompts = [
 	},
 ];
 
-function handleHTML() {
-	//
+function handleHTML(data) {
+	const teamName = data.teamNameInput;
+
+	const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap-grid.min.css"
+	integrity="sha512-Xj2sd25G+JgJYwo0cvlGWXoUekbLg5WvW+VbItCMdXrDoZRWcS/d40ieFHu77vP0dF5PK+cX6TIp+DsPfZomhw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<script src="https://kit.fontawesome.com/23106110f2.js" crossorigin="anonymous"></script>
+	<title>${teamName} Page</title>
+	<link rel="icon" type="image/x-icon" href="../assets/img/909337.png">
+</head>
+<body>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			font-family: sans-serif;
+		}
+		header{
+			background-color: rgb(236, 198, 73);
+			height: 3rem;
+			color: rgb(1, 25, 92);
+			font-weight: bold;
+		}
+		main{
+			background-color: rgb(1, 25, 92);
+			height: 100vh;
+			padding: 5%;
+			margin: 0;
+		}
+		ul{
+			list-style: none;
+		}
+		a {
+			text-decoration: none;
+		}
+		.card {
+			padding: 1%;
+			color: black;
+			background-color: rgb(236, 198, 73);
+			border-radius: 8px;
+			margin: 2%;
+		}
+		.card-header{
+			font-weight: bolder;
+			font-size: 1.25rem;
+			color: rgb(236, 198, 73);
+			background-color:  rgb(1, 25, 92);
+		}
+		.list-group-item{
+			color: aliceblue;
+			background-color: rgb(51, 0, 0);
+			margin: .25%;
+		}
+	</style>
+	<header class="container-fluid ">
+		<h1 class="d-flex justify-content-center">${teamName}</h1>
+	</header>
+	<main class="container-fluid" >
+		<section class="row justify-content-center justify-content-evenly" id="cardHolder">
+		${employees
+			.map((employee) =>
+				employee.generateHTMLCard(
+					employee.officeNumber || employee.github || employee.school
+				)
+			)
+			.join("\n")}
+		</section>
+	</main>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.min.js"
+	integrity="sha512-UR25UO94eTnCVwjbXozyeVd6ZqpaAE9naiEUBK/A+QDbfSTQFhPGj5lOR6d8tsgbBk84Ggb5A3EkjsOgPRPcKA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</html>
+`;
+
+	fs.writeFileSync(`./dist/${teamName.split(" ").join("")}.html`, html);
+	console.log("Team HTML page created, please check ./dist folder.");
 }
 
 function addNewEE() {
@@ -100,19 +175,19 @@ function addNewEE() {
 				if (data.role === "Engineer") {
 					const emp = new Engineer(
 						data.name,
-						data.id,
-						data.email,
-						data.role,
-						data.other
+						`ID #: ${data.idNum}`,
+						`Email: ${data.email}`,
+						"Engineer",
+						`GitHub: ${data.other}`
 					);
 					employees.push(emp);
 				} else {
 					const emp = new Intern(
 						data.name,
-						data.id,
-						data.email,
-						data.role,
-						data.other
+						`ID #: ${data.idNum}`,
+						`Email: ${data.email}`,
+						"Intern",
+						`School: ${data.other}`
 					);
 					employees.push(emp);
 				}
@@ -120,22 +195,27 @@ function addNewEE() {
 				addNewEE();
 			});
 		} else {
-			console.log("making HTML");
-			console.log(employees);
-			handleHTML();
+			prompt({
+				message: "Please input dev team project/name",
+				name: "teamNameInput",
+				type: "input",
+				default: "Project Team",
+			}).then((data) => {
+				console.log(employees);
+				handleHTML(data);
+			});
 		}
 	});
 }
 
 function init() {
 	prompt(managerPrompts).then((data) => {
-		const teamName = data.teamName;
 		const manager = new Manager(
-			data.managerName,
-			data.managerId,
-			data.managerEmail,
+			data.name,
+			`ID #: ${data.idNum}`,
+			`Email: ${data.email}`,
 			"manager",
-			data.managerOffice
+			`Office #: ${data.other}`
 		);
 		employees.push(manager);
 		addNewEE();
