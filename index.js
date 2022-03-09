@@ -177,7 +177,7 @@ function addNewEE() {
 						data.name,
 						`ID #: ${data.idNum}`,
 						`Email: ${data.email}`,
-						"Engineer",
+						`${data.role}`,
 						`GitHub: ${data.other}`
 					);
 					employees.push(emp);
@@ -186,7 +186,7 @@ function addNewEE() {
 						data.name,
 						`ID #: ${data.idNum}`,
 						`Email: ${data.email}`,
-						"Intern",
+						`${data.role}`,
 						`School: ${data.other}`
 					);
 					employees.push(emp);
@@ -214,7 +214,7 @@ function init() {
 			data.name,
 			`ID #: ${data.idNum}`,
 			`Email: ${data.email}`,
-			"manager",
+			`${data.role}`,
 			`Office #: ${data.other}`
 		);
 		employees.push(manager);

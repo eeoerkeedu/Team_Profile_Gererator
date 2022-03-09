@@ -13,7 +13,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "jest --verbose tests/*"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
