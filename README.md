@@ -38,7 +38,7 @@ https://drive.google.com/file/d/1cbE4mgWY0bbPuZr0net_JdFuRYIbo5Yc/view
 
 This project is licensed under MIT
 
-For deatils visit https://choosealicense.com/licenses/mit/
+For details visit https://choosealicense.com/licenses/mit/
 
 ## Contribute
 

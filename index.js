@@ -1,13 +1,18 @@
+// requires all of the lib's constructor classes
 const Employee = require("../Team_Profile_Generator/lib/Employee");
 const Engineer = require("../Team_Profile_Generator/lib/Engineer");
 const Intern = require("../Team_Profile_Generator/lib/Intern");
 const Manager = require("../Team_Profile_Generator/lib/Manager");
+
+// requires the node modules needs for the application
 const { prompt } = require("inquirer");
 const fs = require("fs");
 const { type } = require("os");
 
+// an array to store the new employees as they are made, for use when exporting to the HTML file
 const employees = [];
 
+//The array of questions for the initial promt about of the manager position.
 const managerPrompts = [
 	{
 		message: "Please input the Manager's name:",
@@ -35,6 +40,7 @@ const managerPrompts = [
 	},
 ];
 
+// the array of questions for the Engineer and Intern Employees
 const employeePrompts = [
 	{
 		message: "Which kind of employee would you like to add?",
@@ -72,6 +78,7 @@ const employeePrompts = [
 	},
 ];
 
+//The base HTML creation function to populate the file with the formatting code, scripts and links.
 function handleHTML(data) {
 	const teamName = data.teamNameInput;
 
@@ -155,11 +162,12 @@ function handleHTML(data) {
 
 </html>
 `;
-
+	// writes the above code to an HTML file based on team name.
 	fs.writeFileSync(`./dist/${teamName.split(" ").join("")}.html`, html);
 	console.log("Team HTML page created, please check ./dist folder.");
 }
 
+// main funtion of application, prompts the user to add more EE's or to generate the HTML if they are done, generates the new EE's to the employees array
 function addNewEE() {
 	prompt({
 		message: "Are there more member's on the team?",
@@ -173,6 +181,7 @@ function addNewEE() {
 		if (data.addEE === "Yes, I want to add more team members") {
 			prompt(employeePrompts).then((data) => {
 				if (data.role === "Engineer") {
+					// adds a new engineer
 					const emp = new Engineer(
 						data.name,
 						`ID #: ${data.idNum}`,
@@ -182,6 +191,7 @@ function addNewEE() {
 					);
 					employees.push(emp);
 				} else {
+					//adds a new Intern
 					const emp = new Intern(
 						data.name,
 						`ID #: ${data.idNum}`,
@@ -195,12 +205,14 @@ function addNewEE() {
 				addNewEE();
 			});
 		} else {
+			//allows user to input a team name for their page and document file name.
 			prompt({
 				message: "Please input dev team project/name",
 				name: "teamNameInput",
 				type: "input",
 				default: "Project Team",
 			}).then((data) => {
+				// gives user the roster of EE's and then pushes the data to the HTML fucntion
 				console.log(employees);
 				handleHTML(data);
 			});
@@ -208,6 +220,7 @@ function addNewEE() {
 	});
 }
 
+// function to be run on app load, starts the user with the manager prompt to enter thier info and set them as the first object in the array of employees
 function init() {
 	prompt(managerPrompts).then((data) => {
 		const manager = new Manager(
@@ -222,4 +235,5 @@ function init() {
 	});
 }
 
+//calls initiliazation function to run when app loads
 init();
